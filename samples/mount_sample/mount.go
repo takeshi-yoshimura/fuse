@@ -26,8 +26,8 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/jacobsa/fuse"
-	"github.com/jacobsa/fuse/samples/flushfs"
+	"github.com/takeshi-yoshimura/fuse"
+	"github.com/takeshi-yoshimura/fuse/samples/flushfs"
 )
 
 var fType = flag.String("type", "", "The name of the samples/ sub-dir.")

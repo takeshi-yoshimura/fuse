@@ -19,7 +19,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/jacobsa/fuse/fuseops"
+	"github.com/takeshi-yoshimura/fuse/fuseops"
 )
 
 // Decide on the name of the given op.
@@ -115,6 +115,29 @@ func describeRequest(op interface{}) (s string) {
 		addComponent("offset %d", typed.Offset)
 		addComponent("length %d", typed.Length)
 		addComponent("mode %d", typed.Mode)
+
+	case *fuseops.NotifyInvalEntryOp:
+		addComponent("parent: %v", typed.Parent)
+		addComponent("name %s", typed.Name)
+
+	case *fuseops.NotifyDeleteOp:
+		addComponent("parent: %v", typed.Parent)
+		addComponent("child: %v", typed.Child)
+		addComponent("name %s", typed.Name)
+
+	case *fuseops.NotifyInvalInodeOp:
+		addComponent("inode %d", typed.Ino)
+		addComponent("offset %d", typed.Off)
+		addComponent("length %d", typed.Len)
+
+	case *fuseops.NotifyStoreOp:
+		length := 0
+		for _, buf := range typed.Bufv {
+			length += len(buf)
+		}
+		addComponent("inode %d", typed.Ino)
+		addComponent("offset %d", typed.Offset)
+		addComponent("length %d", length)
 	}
 
 	// Use just the name if there is no extra info.

@@ -783,10 +783,14 @@ type Dirent struct {
 
 const DirentSize = 8 + 8 + 4 + 4
 
+// Notify codes
 const (
 	NotifyCodePoll       int32 = 1
 	NotifyCodeInvalInode int32 = 2
 	NotifyCodeInvalEntry int32 = 3
+	NotifyCodeStore      int32 = 4
+	NotifyCodeRetrieve   int32 = 5
+	NotifyCodeDelete     int32 = 6
 )
 
 type NotifyInvalInodeOut struct {
@@ -795,8 +799,48 @@ type NotifyInvalInodeOut struct {
 	Len int64
 }
 
+const NotifyInvalInodeOutSize = int(unsafe.Sizeof(NotifyInvalInodeOut{}))
+
 type NotifyInvalEntryOut struct {
 	Parent  uint64
 	Namelen uint32
 	padding uint32
+}
+
+const NotifyInvalEntryOutSize = int(unsafe.Sizeof(NotifyInvalEntryOut{}))
+
+type NotifyDeleteOut struct {
+	Parent  uint64
+	Child   uint64
+	Namelen uint32
+	padding uint32
+}
+
+const NotifyDeleteOutSize = int(unsafe.Sizeof(NotifyDeleteOut{}))
+
+type NotifyStoreOut struct {
+	Nodeid  uint64
+	Offset  uint64
+	Size    uint32
+	padding uint32
+}
+
+const NotifyStoreOutSize = int(unsafe.Sizeof(NotifyStoreOut{}))
+
+type NotifyRetrieveOut struct {
+	NotifyUnique uint64
+	Nodeid       uint64
+	Offset       uint64
+	Size         uint32
+	padding      uint32
+}
+
+/* Matches the size of fuse_write_in */
+type NotifyRetrieveIn struct {
+	Dummy1 uint64
+	Offset uint64
+	Size   uint32
+	Dummy2 uint32
+	Dummy3 uint64
+	Dummy4 uint64
 }

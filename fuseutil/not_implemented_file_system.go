@@ -17,8 +17,8 @@ package fuseutil
 import (
 	"context"
 
-	"github.com/jacobsa/fuse"
-	"github.com/jacobsa/fuse/fuseops"
+	"github.com/takeshi-yoshimura/fuse"
+	"github.com/takeshi-yoshimura/fuse/fuseops"
 )
 
 // A FileSystem that responds to all ops with fuse.ENOSYS. Embed this in your
@@ -205,4 +205,9 @@ func (fs *NotImplementedFileSystem) Fallocate(
 }
 
 func (fs *NotImplementedFileSystem) Destroy() {
+}
+
+func (fs *NotImplementedFileSystem) PostOp(
+	ctx context.Context,
+	op interface{}) {
 }

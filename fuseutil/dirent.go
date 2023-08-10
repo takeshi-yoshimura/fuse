@@ -18,7 +18,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/jacobsa/fuse/fuseops"
+	"github.com/takeshi-yoshimura/fuse/fuseops"
 )
 
 type DirentType uint32

@@ -19,8 +19,8 @@ import (
 	"io"
 	"sync"
 
-	"github.com/jacobsa/fuse"
-	"github.com/jacobsa/fuse/fuseops"
+	"github.com/takeshi-yoshimura/fuse"
+	"github.com/takeshi-yoshimura/fuse/fuseops"
 )
 
 // An interface with a method for each op type in the fuseops package. This can
@@ -68,6 +68,8 @@ type FileSystem interface {
 	// decremented to zero, and clean up any resources associated with the file
 	// system. No further calls to the file system will be made.
 	Destroy()
+
+	PostOp(context.Context, interface{})
 }
 
 // Create a fuse.Server that handles ops by calling the associated FileSystem
@@ -239,4 +241,5 @@ func (s *fileSystemServer) handleOp(
 	}
 
 	c.Reply(ctx, err)
+	s.fs.PostOp(ctx, op)
 }

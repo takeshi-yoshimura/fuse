@@ -41,10 +41,22 @@ func Mount(
 	dir string,
 	server Server,
 	config *MountConfig) (*MountedFileSystem, error) {
+	mfs, _, err := MountAndGetNotifier(dir, server, config)
+	return mfs, err
+}
+
+// MountAndGetNotifier attempts to mount a file system on the given directory,
+// using the supplied Server to serve connection requests. It blocks until the
+// file system is successfully mounted. Also, it returns *Notifier to enable
+// cache management from user.
+func MountAndGetNotifier(
+	dir string,
+	server Server,
+	config *MountConfig) (*MountedFileSystem, *Notifier, error) {
 	// Sanity check: make sure the mount point exists and is a directory. This
 	// saves us from some confusing errors later on OS X.
 	if err := checkMountPoint(dir); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// Initialize the struct.
@@ -60,7 +72,7 @@ func Mount(
 	ready := make(chan error, 1)
 	dev, err := mount(dir, config, ready)
 	if err != nil {
-		return nil, fmt.Errorf("mount: %v", err)
+		return nil, nil, fmt.Errorf("mount: %v", err)
 	}
 	if config.DebugLogger != nil {
 		config.DebugLogger.Println("Completed the mounting kickoff process")
@@ -82,7 +94,7 @@ func Mount(
 		config.ErrorLogger,
 		dev)
 	if err != nil {
-		return nil, fmt.Errorf("newConnection: %v", err)
+		return nil, nil, fmt.Errorf("newConnection: %v", err)
 	}
 	if config.DebugLogger != nil {
 		config.DebugLogger.Println("Successfully created the connection")
@@ -101,10 +113,10 @@ func Mount(
 
 	// Wait for the mount process to complete.
 	if err := <-ready; err != nil {
-		return nil, fmt.Errorf("mount (background): %v", err)
+		return nil, nil, fmt.Errorf("mount (background): %v", err)
 	}
 
-	return mfs, nil
+	return mfs, &Notifier{conn: connection}, nil
 }
 
 func checkMountPoint(dir string) error {

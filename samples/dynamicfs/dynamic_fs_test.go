@@ -3,9 +3,9 @@ package dynamicfs_test
 import (
 	"testing"
 
-	"github.com/jacobsa/fuse/fusetesting"
-	"github.com/jacobsa/fuse/samples"
-	"github.com/jacobsa/fuse/samples/dynamicfs"
+	"github.com/takeshi-yoshimura/fuse/fusetesting"
+	"github.com/takeshi-yoshimura/fuse/samples"
+	"github.com/takeshi-yoshimura/fuse/samples/dynamicfs"
 
 	"bytes"
 	"fmt"

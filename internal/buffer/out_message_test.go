@@ -9,7 +9,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/jacobsa/fuse/internal/fusekernel"
+	"github.com/takeshi-yoshimura/fuse/internal/fusekernel"
 	"github.com/kylelemons/godebug/pretty"
 )
 
